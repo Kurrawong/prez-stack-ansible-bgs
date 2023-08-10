@@ -6,7 +6,6 @@
     - group_vars/letsencrypt.yml
     - group_vars/nginx.yml
     - group_vars/prez_ui.yml
-    - group_vars/server.yml
     - group_vars/swapfile.yml
     - group_vars/vault.yml
 
@@ -28,3 +27,7 @@
     - name: fuseki.install
       tags:
         - fuseki.install
+
+    - name: fuseki.data.setup
+      tags:
+        - fuseki.data.setup

@@ -1,0 +1,26 @@
+- block:
+    - name: remove /tmp/fuseki-data-loader directory if it exists
+      ansible.builtin.file:
+        path: /tmp/fuseki-data-loader
+        state: absent
+
+    - name: create directory /tmp/fuseki-data-loader
+      ansible.builtin.file:
+        path: /tmp/fuseki-data-loader
+        state: directory
+        mode: "0755"
+
+    - name: copy Dockerfile from host to target /tmp/fuseki
+      ansible.builtin.copy:
+        src: Dockerfile
+        dest: /tmp/fuseki-data-loader/Dockerfile
+        owner: "{{ vault.server.user }}"
+        mode: "0644"
+
+    - name: build fuseki data loader container
+      ansible.builtin.shell:
+        chdir: /tmp/fuseki-data-loader
+        cmd: |
+          podman build -f Dockerfile -t fuseki-loader .
+
+  become: true

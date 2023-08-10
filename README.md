@@ -123,3 +123,11 @@ Fuseki's basic authentication details such as username and password can be chang
 ```bash
 ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki.install
 ```
+
+#### Setup the Fuseki data loader container
+
+This container will provide an environment with the required dependencies to create and load Fuseki dataset data.
+
+```bash
+ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki.data.setup
+```
