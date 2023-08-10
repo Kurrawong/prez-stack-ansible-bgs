@@ -153,3 +153,14 @@ Variables:
 ```bash
 ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t prez.install
 ```
+
+#### Install Prez UI
+
+Variables:
+
+- [`group_vars/prez_ui.yml`](group_vars/prez_ui.yml)
+- [`group_vars/container_image.yml`](group_vars/container_image.yml)
+
+```bash
+ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t prez-ui.install
+```

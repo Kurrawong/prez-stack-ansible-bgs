@@ -1,0 +1,44 @@
+- block:
+    - name: populate service facts
+      service_facts:
+
+    - name: stop prez-ui
+      systemd:
+        name: container-prez-ui
+        state: stopped
+        daemon_reload: true
+      when: "'container-prez-ui.service' in services"
+
+    - name: copy .env from host to target /home/{{ vault.server.user }}/.env
+      ansible.builtin.template:
+        src: .env.j2
+        dest: /home/{{ vault.server.user }}/.env
+        owner: "{{ vault.server.user }}"
+        mode: "0644"
+
+    - name: create prez-ui container with a systemd service file managed by systemctl
+      containers.podman.podman_container:
+        name: prez-ui
+        image: "{{ container_image.prez_ui }}"
+        state: present
+        ports:
+          - "8001:8000"
+        env_file: /home/{{ vault.server.user }}/.env
+        recreate: true
+        generate_systemd:
+          path: /etc/systemd/system/
+          restart_policy: always
+
+    - name: enable prez-ui service
+      systemd:
+        name: container-prez-ui
+        enabled: true
+        daemon_reload: true
+
+    - name: start prez-ui
+      systemd:
+        name: container-prez-ui
+        state: started
+        daemon_reload: true
+
+  become: true

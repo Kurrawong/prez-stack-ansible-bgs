@@ -43,3 +43,7 @@
     - name: prez.install
       tags:
         - prez.install
+
+    - name: prez-ui.install
+      tags:
+        - prez-ui.install
