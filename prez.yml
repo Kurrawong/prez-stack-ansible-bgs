@@ -39,3 +39,7 @@
     - name: fuseki.data.configure
       tags:
         - fuseki.data.configure
+
+    - name: prez.install
+      tags:
+        - prez.install

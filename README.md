@@ -143,3 +143,13 @@ ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki
 ```bash
 ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki.data.configure
 ```
+
+#### Install Prez
+
+Variables:
+
+- [`group_vars/container_image.yml`](group_vars/container_image.yml)
+
+```bash
+ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t prez.install
+```

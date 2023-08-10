@@ -1,0 +1,42 @@
+- block:
+    - name: populate service facts
+      service_facts:
+
+    - name: stop prez
+      systemd:
+        name: container-prez
+        state: stopped
+        daemon_reload: true
+      when: "'container-prez.service' in services"
+
+    - name: create prez container with a systemd service file managed by systemctl
+      containers.podman.podman_container:
+        name: prez
+        image: "{{ container_image.prez }}"
+        network: host
+        entrypoint: /bin/bash
+        command:
+          - -c
+          - uvicorn prez.app:app --host=0.0.0.0 --port=8000 --proxy-headers
+        env:
+          SPARQL_ENDPOINT: http://0.0.0.0:3030/bgs/sparql
+          SPARQL_USERNAME: "{{ vault.fuseki.username }}"
+          SPARQL_PASSWORD: "{{ vault.fuseki.password }}"
+        state: present
+        generate_systemd:
+          path: /etc/systemd/system/
+          restart_policy: always
+
+    - name: enable prez service
+      systemd:
+        name: container-prez
+        enabled: true
+        daemon_reload: true
+
+    - name: start prez
+      systemd:
+        name: container-prez
+        state: started
+        daemon_reload: true
+
+  become: true
