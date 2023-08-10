@@ -131,3 +131,15 @@ This container will provide an environment with the required dependencies to cre
 ```bash
 ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki.data.setup
 ```
+
+#### Create Fuseki dataset
+
+```bash
+ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki.data.create
+```
+
+#### Configure Fuseki dataset
+
+```bash
+ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t fuseki.data.configure
+```

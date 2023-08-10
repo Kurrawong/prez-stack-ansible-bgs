@@ -1,0 +1,48 @@
+- block:
+    - name: copy enable_union_default_graph.py from host to target /tmp/fuseki-data-loader/enable_union_default_graph.py
+      ansible.builtin.copy:
+        src: enable_union_default_graph.py
+        dest: /tmp/fuseki-data-loader/enable_union_default_graph.py
+        owner: "{{ vault.server.user }}"
+        mode: "0644"
+
+    - name: copy enable_geosparql.py from host to target /tmp/fuseki-data-loader/enable_geosparql.py
+      ansible.builtin.copy:
+        src: enable_geosparql.py
+        dest: /tmp/fuseki-data-loader/enable_geosparql.py
+        owner: "{{ vault.server.user }}"
+        mode: "0644"
+
+    - name: stop fuseki service
+      ansible.builtin.systemd:
+        name: container-fuseki
+        state: stopped
+
+    - name: run enable_union_default_graph.py on fuseki dataset
+      ansible.builtin.shell:
+        chdir: /tmp/fuseki-data-loader
+        cmd: |
+          podman run \
+            --rm \
+            --volumes-from=fuseki \
+            -v /tmp/fuseki-data-loader/enable_union_default_graph.py:/workspace/enable_union_default_graph.py \
+            fuseki-loader \
+            /bin/bash -c 'python enable_union_default_graph.py /fuseki/configuration/bgs.ttl'
+
+    - name: run enable_geosparql.py on fuseki dataset
+      ansible.builtin.shell:
+        chdir: /tmp/fuseki-data-loader
+        cmd: |
+          podman run \
+            --rm \
+            --volumes-from=fuseki \
+            -v /tmp/fuseki-data-loader/enable_geosparql.py:/workspace/enable_geosparql.py \
+            fuseki-loader \
+            /bin/bash -c 'python enable_geosparql.py /fuseki/configuration/bgs.ttl'
+
+    - name: start fuseki service
+      ansible.builtin.systemd:
+        name: container-fuseki
+        state: restarted
+
+  become: true

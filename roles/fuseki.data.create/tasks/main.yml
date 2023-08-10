@@ -1,0 +1,7 @@
+- block:
+    - name: create fuseki dataset
+      ansible.builtin.shell:
+        cmd: |
+          podman run --rm --network=host fuseki-loader /bin/bash -c 'kurra fuseki dataset create http://localhost:3030 bgs -u {{ vault.fuseki.username }} -p {{ vault.fuseki.password }}'
+
+  become: true

@@ -31,3 +31,11 @@
     - name: fuseki.data.setup
       tags:
         - fuseki.data.setup
+
+    - name: fuseki.data.create
+      tags:
+        - fuseki.data.create
+
+    - name: fuseki.data.configure
+      tags:
+        - fuseki.data.configure
