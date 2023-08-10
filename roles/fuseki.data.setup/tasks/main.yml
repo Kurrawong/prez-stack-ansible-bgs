@@ -10,7 +10,7 @@
         state: directory
         mode: "0755"
 
-    - name: copy Dockerfile from host to target /tmp/fuseki
+    - name: copy Dockerfile from host to target /tmp/fuseki-data-loader
       ansible.builtin.copy:
         src: Dockerfile
         dest: /tmp/fuseki-data-loader/Dockerfile
