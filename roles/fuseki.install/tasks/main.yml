@@ -1,6 +1,6 @@
 - block:
     - name: create directory /fuseki-data
-      file:
+      ansible.builtin.file:
         path: /fuseki-data
         state: directory
         mode: "0755"
@@ -8,7 +8,7 @@
         group: "{{ vault.server.user }}"
 
     - name: create directory /usr/local/etc/fuseki
-      file:
+      ansible.builtin.file:
         path: /usr/local/etc/fuseki
         state: directory
         mode: "0755"
@@ -25,7 +25,7 @@
       service_facts:
 
     - name: stop fuseki
-      systemd:
+      ansible.builtin.systemd:
         name: container-fuseki
         state: stopped
         daemon_reload: true
