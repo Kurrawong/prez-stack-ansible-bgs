@@ -1,0 +1,4 @@
+fuseki:
+  # list of publicly accessible read-only fuseki datasets
+  public_datasets:
+    - bgs

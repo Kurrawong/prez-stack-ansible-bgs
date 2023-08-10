@@ -1,0 +1,15 @@
+server {
+    server_name {{ nginx.api_server_name }};
+
+    include /etc/nginx/prez.conf;
+}
+
+server {
+    server_name {{ nginx.base_server_name }};
+
+    {% if nginx.expose_fuseki %}
+    include /etc/nginx/fuseki.conf;
+    {% endif %}
+
+    include /etc/nginx/prez-ui.conf;
+}

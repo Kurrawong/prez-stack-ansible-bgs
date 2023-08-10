@@ -1,0 +1,11 @@
+- block:
+    - name: apt-get update
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: install podman
+      ansible.builtin.apt:
+        name:
+          - podman
+
+  become: true

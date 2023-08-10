@@ -1,0 +1,3 @@
+letsencrypt:
+  # values are comma separated
+  domain_names: bgs.dev.kurrawong.ai,api.bgs.dev.kurrawong.ai

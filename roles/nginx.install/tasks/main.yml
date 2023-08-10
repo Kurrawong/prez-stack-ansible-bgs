@@ -1,0 +1,70 @@
+- block:
+    - name: apt-get update
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: install nginx and snap
+      ansible.builtin.apt:
+        name:
+          - nginx
+          - snapd
+          - cron
+
+    - name: copy templated http.conf from host to target /etc/nginx/conf.d/http.conf
+      ansible.builtin.template:
+        src: http.conf.j2
+        dest: /etc/nginx/conf.d/http.conf
+        owner: root
+        mode: "0644"
+
+    - name: copy fuseki.conf from host to target /etc/nginx/fuseki.conf
+      ansible.builtin.copy:
+        src: fuseki.conf
+        dest: /etc/nginx/fuseki.conf
+        owner: root
+        mode: "0644"
+
+    - name: copy prez.conf from host to target /etc/nginx/prez.conf
+      ansible.builtin.copy:
+        src: prez.conf
+        dest: /etc/nginx/prez.conf
+        owner: root
+        mode: "0644"
+
+    - name: copy prez-ui.conf from host to target /etc/nginx/prez-ui.conf
+      ansible.builtin.copy:
+        src: prez-ui.conf
+        dest: /etc/nginx/prez-ui.conf
+        owner: root
+        mode: "0644"
+
+    - name: update snap core and install certbot
+      community.general.snap:
+        name:
+          - core
+          - certbot
+        classic: true
+
+    - name: create symlink for certbot
+      ansible.builtin.file:
+        src: /snap/bin/certbot
+        dest: /usr/bin/certbot
+        state: link
+
+    - name: enable and start nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: true
+
+    - name: letsencrypt with certbot
+      shell: certbot --nginx -n --agree-tos --email {{ vault.letsencrypt.email }} --expand -d {{ letsencrypt.domain_names }}
+
+    - name: set up letsencrypt cron job
+      lineinfile:
+        name: /etc/crontab
+        # Renew at 5 pm UTC, which is 3 am Brisbane/Australia time.
+        line: 0 17 * * * root python3 -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q
+        state: present
+
+  become: true

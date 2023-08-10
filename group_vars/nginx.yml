@@ -1,0 +1,6 @@
+nginx:
+  # a boolean value to control whether fuseki is accessible publicly via nginx
+  expose_fuseki: true
+
+  base_server_name: bgs.dev.kurrawong.ai
+  api_server_name: api.bgs.dev.kurrawong.ai

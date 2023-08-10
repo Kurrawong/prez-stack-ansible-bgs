@@ -1,0 +1,61 @@
+- block:
+    - name: create directory /fuseki-data
+      file:
+        path: /fuseki-data
+        state: directory
+        mode: "0755"
+        owner: "{{ vault.server.user }}"
+        group: "{{ vault.server.user }}"
+
+    - name: create directory /usr/local/etc/fuseki
+      file:
+        path: /usr/local/etc/fuseki
+        state: directory
+        mode: "0755"
+
+    - name: copy the templated shiro.ini file to target
+      ansible.builtin.template:
+        src: shiro.ini.j2
+        dest: /usr/local/etc/fuseki/shiro.ini
+        mode: "0600"
+        owner: 1000
+        group: 1000
+
+    - name: populate service facts
+      service_facts:
+
+    - name: stop fuseki
+      systemd:
+        name: container-fuseki
+        state: stopped
+        daemon_reload: true
+      when: "'container-fuseki.service' in services"
+
+    - name: create fuseki container with a systemd service file managed by systemctl
+      containers.podman.podman_container:
+        name: fuseki
+        image: "{{ container_image.fuseki }}"
+        state: present
+        recreate: true
+        volume:
+          - /fuseki-data:/fuseki
+          - /usr/local/etc/fuseki/shiro.ini:/opt/fuseki/shiro.ini
+        ports:
+          - "3030:3030"
+        generate_systemd:
+          path: /etc/systemd/system/
+          restart_policy: always
+
+    - name: enable fuseki service
+      systemd:
+        name: container-fuseki
+        enabled: true
+        daemon_reload: true
+
+    - name: start fuseki
+      systemd:
+        name: container-fuseki
+        state: started
+        daemon_reload: true
+
+  become: true
