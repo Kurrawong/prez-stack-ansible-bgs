@@ -13,7 +13,7 @@ The Prez Stack consists of the following:
 
 The different components of the Prez Stack run inside containers managed by Podman. The containers themselves are not managed directly with Podman but instead are managed via systemctl. Example, to restart the Fuseki container, run `sudo systemctl restart container-fuseki`. However, manual actions such as these shouldn't be required and instead, they should be actioned through a role within the `prez.yml` playbook.
 
-Fuseki, Prez and Prez UI all run inside their own containers and they are accessed through an NGINX server running on the target machine.
+Fuseki, Prez and Prez UI all run inside their own containers and they are accessed through an nginx server running on the target machine.
 
 ![prez-stack.png](static/prez-stack.png)
 
