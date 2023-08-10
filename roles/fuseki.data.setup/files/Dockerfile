@@ -11,4 +11,4 @@ RUN pip install \
         rich \
         rdflib
 
-WORKDIR /app
+WORKDIR /workspace
