@@ -164,3 +164,33 @@ Variables:
 ```bash
 ansible-playbook -i hosts --vault-password-file ./ansiblepass prez.yml -t prez-ui.install
 ```
+
+### Data Loading
+
+#### Data
+
+Once Fuseki is up and running, upload data using the [`kurra`](https://github.com/Kurrawong/kurrawong-python) CLI.
+
+Upload data files:
+
+```bash
+kurra fuseki upload <file-or-directory> https://bgs.dev.kurrawong.ai/fuseki/bgs -u $FUSEKI_USERNAME -p $FUSEKI_PASSWORD
+```
+
+#### Labels
+
+Prez will display labels for things identified with IRIs. To ensure all resources have labels, use the [`labelify`](https://github.com/Kurrawong/labelify) tool.
+
+Firstly, compound all the data into one file using this [script](https://github.com/BritishGeologicalSurvey/vocabularies/pull/2/files#diff-e1558e54c56a937cbb5b365a3964ffc99be8bc423010620d650f892fd0db025a).
+
+```bash
+python compound.py
+```
+
+This will produce a `compounded.ttl` file.
+
+Run the `labelify` tool.
+
+```bash
+labelify compounded.ttl -l "https://schema.org/name,http://www.w3.org/2004/02/skos/core#prefLabel,http://www.w3.org/2000/01/rdf-schema#label" > labels.txt
+```
