@@ -1,4 +1,4 @@
 container_image:
   fuseki: ghcr.io/kurrawong/fuseki-geosparql:git-main-e642d849
-  prez: ghcr.io/rdflib/prez:3.6.0
+  prez: ghcr.io/rdflib/prez:3.7.0
   prez_ui: ghcr.io/kurrawong/bgs-prez-ui:git-main-100339dc
